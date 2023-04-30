@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Import{% endblock %}
+{% block content %}
+<div id="error">
+{% with messages = get_flashed_messages() -%}
+{% if messages -%}
+    <div class="error">{{ messages[0] }}</div>
+{% endif -%}
+{% endwith -%}
+</div>
+<div id="import-form">
+  <form action="/series/import" method="POST">
+    <label for="ids">Series id(s): <textarea id="ids" name="ids" required autofocus></textarea></label><br>
+    <button>Import</button>
+  </form>
+</div>
+{% endblock %}

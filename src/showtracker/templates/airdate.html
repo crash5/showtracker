@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Airdate{% endblock %}
+{% block content %}
+    <div id="error"></div>
+    <table id="airdate"></table>
+    <script type="module">
+        import { populate_airdates } from './js/airdate.js';
+        let id = new URLSearchParams(document.location.search).get('id');
+        if (!id) {
+            id = 1;
+        }
+        fetch(`/api/users/${id}/airdate`)
+        .then(res => res.json())
+        .then(data => populate_airdates(data, document.getElementById("airdate")))
+        .catch(err => {
+            const error_div = document.getElementById("error");
+            error_div.innerHTML = err.message;
+            console.log(err.message)
+        });
+    </script>
+{% endblock %}

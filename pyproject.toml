@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veluna-showtracker"
+version = "1.0.0"
+authors = [{ name = "Imre NAGY" }]
+dependencies = [
+    "Flask >= 2.2.2",
+    "Flask-Login >= 0.6.2",
+]
+requires-python = ">=3.9"

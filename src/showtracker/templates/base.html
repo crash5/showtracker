@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}{% endblock %} | Showtracker</title>
+    <meta name="description" content="Showtracker">
+    <meta name="author" content="Imre Nagy">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
+    {% block header %}<link rel="stylesheet" href="/css/default.css?v=1.0">{% endblock %}
+</head>
+<body>
+	<div id="user-navbar">
+        <a href="{{ url_for('airdate') }}" class="navbar-item">Airdate</a> |
+    {% if current_user.is_authenticated -%}
+        <a href="{{ url_for('following') }}" class="navbar-item">Following</a> |
+        {{ current_user.name }} |
+        <a href="{{ url_for('auth.logout') }}" class="navbar-item">Logout</a>
+    {%- endif %}
+    {%- if not current_user.is_authenticated -%}
+        <a href="{{ url_for('auth.login') }}" class="navbar-item">Login</a>
+    {%- endif %}
+    </div>
+    <hr>
+    <div id="content">{% block content %}{% endblock %}</div>
+    <footer>{% block footer %}<p id="data-source-info">Runtime information provided by <a href="https://www.tvmaze.com/" target="_blank" rel="noopener noreferrer">TVmaze.com</a></p>{% endblock %}</footer>
+</body>
+</html>
