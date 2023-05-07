@@ -192,7 +192,7 @@ def save_show_to_user(show_id, selected_season, position, member_id):
 def select_season(member_id, show_id, selected_season):
     con = get_connection(mode='rw')
     con.execute(
-        'UPDATE Member_Series SET selected_season = ? WHERE member_id = ? AND series_id = ?'
+        'UPDATE Member_Series SET selected_season = ? WHERE member_id = ? AND series_id = ?',
         (selected_season, member_id, show_id)
     )
     con.commit()
