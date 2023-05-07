@@ -15,6 +15,7 @@
 	<div id="user-navbar">
         <a href="{{ url_for('airdate') }}" class="navbar-item">Airdate</a> |
     {% if current_user.is_authenticated -%}
+        <a href="{{ url_for('import') }}" class="navbar-item">Import</a> |
         <a href="{{ url_for('following') }}" class="navbar-item">Following</a> |
         {{ current_user.name }} |
         <a href="{{ url_for('auth.logout') }}" class="navbar-item">Logout</a>

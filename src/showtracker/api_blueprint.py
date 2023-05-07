@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 
 from .sqliteapi import get_airdate, get_following, set_season_status, set_episode_status, get_series_details, select_season
+from .util.tvmaze_import import import_series
 
 
 bp = Blueprint('api', __name__)
@@ -105,11 +106,12 @@ def to_int(x):
 @bp.route('/import', methods=['POST'])
 @login_required
 def import_series_post():
-    # current_user.id
     ids_input = request.form.get('ids')
     ids = ids_input.split()
-    ids_int = list(filter(lambda x: isinstance(x, int), map(to_int, ids)))
+    ids_int = list(set(filter(lambda x: isinstance(x, int), map(to_int, ids))))
     if not ids_int:
         return jsonify(''), 400
+
+    import_series(ids_int, current_user.id)
 
     return jsonify(ids_int)

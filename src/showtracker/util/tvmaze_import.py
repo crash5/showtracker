@@ -4,7 +4,7 @@ import showtracker.sqliteapi as db
 from . import tvmaze as tvm
 
 
-def import_series(to_import):
+def import_series(to_import, member_id):
     print(f'Import series: {to_import}')
     for maze_id in to_import:
         try:
@@ -19,13 +19,14 @@ def import_series(to_import):
 
         print(f'Save show with mazeid {maze_id} to DB')
         show_id = tvm.save(show)
-        print(f'Save show with id {show_id} to User')
-        db.save_show_to_user(show_id, 1, 1, 1)
+        print(f'Save Show({show_id}) to User({member_id})')
+        db.save_show_to_user(show_id, 1, 1, member_id)
 
 
 if __name__ == '__main__':
     print('begin')
 
-    import_series(set(sys.argv[1:]))
+    crash_member_id = 1
+    import_series(set(sys.argv[1:]), crash_member_id)
 
     print('end')
