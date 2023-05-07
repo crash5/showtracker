@@ -1,4 +1,5 @@
 from datetime import timedelta
+import os
 
 from flask import Flask, render_template, redirect, url_for
 from flask_login import LoginManager, current_user, login_required
@@ -9,8 +10,7 @@ from . import auth
 
 app = Flask(__name__, static_url_path='')
 app.config.update(
-    # TODO(crash): get secret from env. var
-    SECRET_KEY=b'',
+    SECRET_KEY=os.getenv('FLASK_SECRET'),
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Strict',
