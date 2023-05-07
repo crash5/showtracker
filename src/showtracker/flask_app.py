@@ -16,7 +16,8 @@ app.config.update(
     SESSION_COOKIE_SAMESITE='Strict',
     REMEMBER_COOKIE_HTTPONLY=True,
     REMEMBER_COOKIE_SECURE=True,
-    REMEMBER_COOKIE_DURATION=timedelta(days=30)
+    REMEMBER_COOKIE_DURATION=timedelta(days=30),
+    REMEMBER_COOKIE_SAMESITE='Strict'
 )
 
 login_manager = LoginManager()
