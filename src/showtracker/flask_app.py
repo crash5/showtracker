@@ -4,8 +4,11 @@ import os
 from flask import Flask, render_template, redirect, url_for
 from flask_login import LoginManager, current_user, login_required
 
+from flask_apscheduler import APScheduler
+
 from . import api_blueprint
 from . import auth
+from .util import tvmaze_update
 
 
 app = Flask(__name__, static_url_path='')
@@ -26,6 +29,20 @@ login_manager.login_view = 'auth.login'
 # login_manager.session_protection = "strong"
 
 
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+scheduler.add_job(
+    func=tvmaze_update.main,
+    trigger='interval',
+    hours=8,
+    id='update_from_tvmaze',
+    replace_existing=True,
+    coalesce=True,
+    max_instances=1,
+)
+
+
 @login_manager.user_loader
 def load_user(user_id: str):
     return auth.load_user(user_id)
@@ -33,7 +50,6 @@ def load_user(user_id: str):
 
 app.register_blueprint(api_blueprint.bp, url_prefix='/api')
 app.register_blueprint(auth.bp)
-
 
 
 @app.route('/')

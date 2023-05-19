@@ -40,13 +40,13 @@ def update_series(to_import):
         tvm.save(show)
 
 
-if __name__ == '__main__':
-    print('begin')
-
+def main():
     to_update = series_to_update(
         get_updated_series_id_from_tvmaze(),
         db.get_external_site_infos('tvmaze'))
     tvmaze_ids = {show[2] for show in to_update}
     update_series(tvmaze_ids)
 
-    print('end')
+
+if __name__ == '__main__':
+    main()
