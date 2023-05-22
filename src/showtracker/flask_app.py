@@ -1,3 +1,4 @@
+import logging
 from datetime import timedelta
 import os
 
@@ -11,9 +12,18 @@ from . import auth
 from .util import tvmaze_update
 
 
+logger = logging.getLogger()
+
+
+FLASK_SECRET_KEY = os.getenv('FLASK_SECRET')
+if not FLASK_SECRET_KEY:
+    logger.warning('No secret key from "FLASK_SECRET" environment variable, using an automatically generated secret key.')
+    FLASK_SECRET_KEY = os.urandom(12)
+
+
 app = Flask(__name__, static_url_path='')
 app.config.update(
-    SECRET_KEY=os.getenv('FLASK_SECRET'),
+    SECRET_KEY=FLASK_SECRET_KEY,
     SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Strict',
