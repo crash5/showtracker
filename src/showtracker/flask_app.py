@@ -2,19 +2,21 @@ import logging
 from datetime import timedelta
 import os
 
-from flask import Flask, render_template, redirect, url_for
-from flask_login import LoginManager, current_user, login_required
-
+from flask import Flask
+from flask_login import LoginManager
 from flask_apscheduler import APScheduler
 
 from . import api
+from . import web
 from . import auth
 from .util import tvmaze_update
-
 
 logger = logging.getLogger()
 
 
+##########
+# App
+##########
 FLASK_SECRET_KEY = os.getenv('FLASK_SECRET')
 if not FLASK_SECRET_KEY:
     logger.warning('No secret key from "FLASK_SECRET" environment variable, using an automatically generated secret key.')
@@ -33,12 +35,24 @@ app.config.update(
     REMEMBER_COOKIE_SAMESITE='Strict'
 )
 
+
+##########
+# Auth
+##########
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'auth.login'
+login_manager.login_view = 'web.login'
 # login_manager.session_protection = "strong"
 
 
+@login_manager.user_loader
+def load_user(user_id: str):
+    return auth.load_user(user_id)
+
+
+##########
+# Scheduler
+##########
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
@@ -53,35 +67,8 @@ scheduler.add_job(
 )
 
 
-@login_manager.user_loader
-def load_user(user_id: str):
-    return auth.load_user(user_id)
-
-
+##########
+# Blueprint
+##########
 app.register_blueprint(api.bp, url_prefix='/api')
-app.register_blueprint(auth.bp)
-
-
-@app.route('/')
-def index():
-    if current_user.is_authenticated:
-        return redirect(url_for('airdate'))
-    else:
-        return redirect(url_for('auth.login'))
-
-@app.route('/airdate')
-def airdate():
-    return render_template('airdate.html')
-
-@app.route('/following')
-def following():
-    return render_template('following.html')
-
-@app.route('/series/<int:id>')
-def series(id):
-    return 'Under construction'
-
-@app.route('/import')
-@login_required
-def import_series():
-    return render_template('import.html')
+app.register_blueprint(web.bp)
