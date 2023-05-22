@@ -7,7 +7,7 @@ from flask_login import LoginManager, current_user, login_required
 
 from flask_apscheduler import APScheduler
 
-from . import api_blueprint
+from . import api
 from . import auth
 from .util import tvmaze_update
 
@@ -58,7 +58,7 @@ def load_user(user_id: str):
     return auth.load_user(user_id)
 
 
-app.register_blueprint(api_blueprint.bp, url_prefix='/api')
+app.register_blueprint(api.bp, url_prefix='/api')
 app.register_blueprint(auth.bp)
 
 
