@@ -1,6 +1,7 @@
 import logging
 from datetime import timedelta
 import os
+from pathlib import Path
 
 from flask import Flask
 from flask_login import LoginManager
@@ -9,9 +10,13 @@ from flask_apscheduler import APScheduler
 from . import api
 from . import web
 from . import auth
+from .db import db
 from .util import tvmaze_update
 
+
 logger = logging.getLogger()
+
+db_path = Path(os.getcwd()).resolve() / 'db.sqlite'
 
 
 ##########
@@ -32,8 +37,15 @@ app.config.update(
     REMEMBER_COOKIE_HTTPONLY=True,
     REMEMBER_COOKIE_SECURE=True,
     REMEMBER_COOKIE_DURATION=timedelta(days=30),
-    REMEMBER_COOKIE_SAMESITE='Strict'
+    REMEMBER_COOKIE_SAMESITE='Strict',
+    SQLALCHEMY_DATABASE_URI=f'sqlite:///{db_path}'
 )
+
+
+##########
+# Database
+##########
+db.init_app(app)
 
 
 ##########
