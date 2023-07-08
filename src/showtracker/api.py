@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 
-from .sqliteapi import get_airdate, get_following, set_season_status, set_episode_status, get_series_details, select_season
+from .sqliteapi import get_airdate, get_following, get_series_episodes, set_season_status, set_episode_status, get_series_details, select_season
 from .util.tvmaze_import import import_series
 
 
@@ -15,6 +15,13 @@ def series(series_id):
         return jsonify({'error': 'Series not found!'}), 404
     return jsonify(series)
 
+
+@bp.route('/series/<int:series_id>/episodes', methods=['GET'])
+def series_episodes(series_id):
+    episodes = get_series_episodes(series_id)
+    if not episodes:
+        return jsonify({'error': 'Series not found!'}), 404
+    return jsonify(episodes)
 
 
 @bp.route('/users/<int:member_id>/airdate')

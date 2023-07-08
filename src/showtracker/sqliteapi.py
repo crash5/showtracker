@@ -1,6 +1,8 @@
 import sqlite3
 import datetime
 
+from .db import db, text
+
 
 def get_connection(file='db.sqlite', mode='ro'):
     con = sqlite3.connect(f'file:{file}?mode={mode}', uri=True)
@@ -134,6 +136,28 @@ def get_series_details(series_id):
         show['external_sites'][res['external_site_name']] = res['external_site_value']
 
     return show
+
+
+def get_series_episodes(series_id):
+    q1 = db.session.execute(
+        text('SELECT * FROM Episode AS E WHERE series_id = :sid ORDER BY E.season, E.number'),
+        {'sid': series_id}
+    )
+
+    seasons = dict()
+    for res in q1:
+        res = res._asdict()
+        season = res['season']
+        if season not in seasons:
+            seasons[season] = []
+        seasons[season].append({
+            'number': res['number'],
+            'name': res['name'],
+            'airstamp': res['airstamp']
+        })
+
+    return seasons
+
 
 
 def set_season_status(member_id, series_id, season, status):
