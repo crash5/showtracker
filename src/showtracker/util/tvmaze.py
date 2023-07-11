@@ -28,7 +28,7 @@ class Show:
 
 
 
-con = sqlite3.connect('db.sqlite')
+con = sqlite3.connect('db.sqlite', check_same_thread=False)
 
 
 def save_show_to_db_by_id(show_id, show):
