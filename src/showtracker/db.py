@@ -1,5 +1,4 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.sql import text
 from sqlalchemy.engine import Engine
 from sqlalchemy import event
 

@@ -1,8 +1,9 @@
 from flask import Blueprint, jsonify, request
 from flask_login import current_user, login_required
 
-from .sqliteapi import get_airdate, get_following, get_series_episodes, set_season_status, set_episode_status, get_series_details, select_season
-from .util.tvmaze_import import import_series
+from . import sqliteapi
+from .util import tvmaze
+from .db import db
 
 
 bp = Blueprint('api', __name__)
@@ -10,15 +11,17 @@ bp = Blueprint('api', __name__)
 
 @bp.route('/series/<int:series_id>', methods=['GET'])
 def series(series_id):
-    series = get_series_details(series_id)
+    series = sqliteapi.get_series_details(db.session, series_id)
     if not series:
         return jsonify({'error': 'Series not found!'}), 404
+    episodes = sqliteapi.get_series_episodes(db.session, series_id)
+    series['episodes'] = episodes
     return jsonify(series)
 
 
 @bp.route('/series/<int:series_id>/episodes', methods=['GET'])
 def series_episodes(series_id):
-    episodes = get_series_episodes(series_id)
+    episodes = sqliteapi.get_series_episodes(db.session, series_id)
     if not episodes:
         return jsonify({'error': 'Series not found!'}), 404
     return jsonify(episodes)
@@ -40,7 +43,7 @@ def airdate(member_id):
         last_day_of_month = calendar.monthrange(first_date.year, first_date.month)[1]
         last_date = first_date.replace(day = last_day_of_month)
 
-    show_dict = get_airdate(first_date, last_date, member_id)
+    show_dict = sqliteapi.get_airdate(db.session, first_date, last_date, member_id)
     show_dict['user_id'] = member_id
     return jsonify(show_dict)
 
@@ -48,7 +51,7 @@ def airdate(member_id):
 def following(member_id):
     member_id = 1
     shows = dict()
-    shows['data'] = get_following(member_id)
+    shows['data'] = sqliteapi.get_following(db.session, member_id)
     shows['user_id'] = member_id
     return jsonify(shows)
 
@@ -64,7 +67,7 @@ def user_series_season_patch(member_id, series_id, season):
 
     body = request.get_json(force=True)
     if body.get('status') == 'seen':
-        set_season_status(member_id, series_id, season, 2)
+        sqliteapi.set_season_status(db.session, member_id, series_id, season, 2)
         return jsonify(''), 200
     return jsonify(''), 404
 
@@ -77,12 +80,12 @@ def user_series_season_episode_patch(member_id, series_id, season, episode):
 
     body = request.get_json(force=True)
     if body.get('status') == 'seen':
-        set_episode_status(member_id, series_id, season, episode, 2)
+        sqliteapi.set_episode_status(db.session, member_id, series_id, season, episode, 2)
         return jsonify(''), 200
 
     if body.get('status') == 'unseen':
         # TODO: delete instead of change to 0
-        set_episode_status(member_id, series_id, season, episode, 0)
+        sqliteapi.set_episode_status(db.session, member_id, series_id, season, episode, 0)
         return jsonify(''), 200
 
     return jsonify(''), 404
@@ -97,11 +100,10 @@ def user_series_patch(member_id, series_id):
     body = request.get_json(force=True)
     selected_season = to_int(body.get('selected_season'))
     if selected_season:
-        select_season(member_id, series_id, selected_season)
+        sqliteapi.select_season(db.session, member_id, series_id, selected_season)
         return jsonify(''), 200
 
     return jsonify(''), 404
-
 
 
 def to_int(x):
@@ -119,6 +121,6 @@ def import_series_post():
     if not ids_int:
         return jsonify(''), 400
 
-    import_series(ids_int, current_user.id)
+    tvmaze.import_series_to_user(db.session, ids_int, current_user.id)
 
     return jsonify(ids_int)
