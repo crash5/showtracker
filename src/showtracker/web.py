@@ -30,6 +30,10 @@ def following():
 def import_series():
     return render_template('import.html')
 
+@bp.route('/series/<int:id>')
+def series(id):
+    return render_template('series_detail.html', id=id)
+
 
 @bp.route('/login')
 def login():
