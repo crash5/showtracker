@@ -73,9 +73,9 @@ def get_updated_series_id_from_tvmaze():
 def series_to_update(updated, series):
     show_to_update = set()
     for show in series:
-        if show[2] in updated and (show[3] is None or int(show[3]) < int(updated[show[2]])):
+        if show['series_id'] in updated and (show['last_update'] is None or int(show['last_update']) < int(updated[show['series_id']])):
             show_to_update.add(show)
-        elif show[3] is None:
+        elif show['last_update'] is None:
             show_to_update.add(show)
     return show_to_update
 
@@ -102,5 +102,5 @@ def update_shows(session):
     to_update = series_to_update(
         get_updated_series_id_from_tvmaze(),
         db.get_external_site_infos(session, 'tvmaze'))
-    tvmaze_ids = {show[2] for show in to_update}
+    tvmaze_ids = {show['series_id'] for show in to_update}
     import_shows(session, tvmaze_ids)

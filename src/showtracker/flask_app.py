@@ -11,7 +11,7 @@ from . import api
 from . import web
 from . import auth
 from .db import db
-from .util import tvmaze_update
+from .util import tvmaze
 
 
 logger = logging.getLogger()
@@ -65,11 +65,16 @@ def load_user(user_id: str):
 ##########
 # Scheduler
 ##########
+def update_shows():
+    with app.app_context():
+        tvmaze.update_shows(db.session)
+
+
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 scheduler.add_job(
-    func=tvmaze_update.main,
+    func=update_shows,
     trigger='interval',
     hours=8,
     id='update_from_tvmaze',
