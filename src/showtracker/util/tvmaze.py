@@ -104,3 +104,19 @@ def update_shows(session):
         db.get_external_site_infos(session, 'tvmaze'))
     tvmaze_ids = {show['series_id'] for show in to_update}
     import_shows(session, tvmaze_ids)
+
+
+def main():
+    import os
+    from pathlib import Path
+    from sqlalchemy import create_engine
+
+# TODO(crash): get it from config file
+    db_path = Path(os.getcwd()).resolve() / 'db.sqlite'
+    engine = create_engine(f'sqlite:///{db_path}')
+    with engine.connect() as conn:
+        update_shows(conn)
+
+
+if __name__ == '__main__':
+    main()
