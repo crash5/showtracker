@@ -1,16 +1,20 @@
 [build-system]
-requires = ["setuptools>=61.0.0", "wheel"]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "veluna-showtracker"
-version = "1.0.0"
+dynamic = ["version"]
 authors = [{ name = "Imre NAGY" }]
 dependencies = [
-    "Flask >= 2.2.2",
-    "Flask-Login >= 0.6.2",
-    "Flask-APScheduler >= 1.12",
-    "SQLAlchemy >= 2.0.18",
+    "flask >= 2.2.2",
+    "flask-login >= 0.6.2",
+    "flask-apscheduler >= 1.12",
+    "sqlalchemy >= 2.0.18",
     "python-dotenv >= 0.8"
 ]
 requires-python = ">=3.9"
+
+[tool.setuptools_scm]
+version_file = "src/showtracker/VERSION"
+version_file_template = "{version}"
