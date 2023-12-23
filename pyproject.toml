@@ -10,7 +10,7 @@ dependencies = [
     "flask >= 2.2.2",
     "flask-login >= 0.6.2",
     "flask-apscheduler >= 1.12",
-    "sqlalchemy >= 2.0.18",
+    "flask-sqlalchemy",
     "python-dotenv >= 0.8"
 ]
 requires-python = ">=3.9"
