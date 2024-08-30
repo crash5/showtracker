@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Series detail{% endblock %}
+
+{% block header %}
+<!-- https://grid.layoutit.com/ -->
+<link rel="stylesheet" href="/css/default.css?v=1.0">
+<style>
+    .container, a {
+        color: white;
+        text-align: center;
+    }
+</style>
+{% endblock %}
+{% block content %}
+    <div id="error"></div>
+    <table id="season"></table>
+
+<div class="container">
+  <div class="name"></div>
+  <div class="details"></div>
+  <div class="external"></div>
+  <div class="seasons"></div>
+</div>
+
+    <script type="module">
+        function create_div(text) {
+            const newDiv = document.createElement("div");
+            const newContent = document.createTextNode(text);
+            newDiv.appendChild(newContent);
+            return newDiv;
+        }
+
+        function display(data) {
+            document.getElementsByClassName("name")[0].innerHTML = `${data.name}`;
+            document.getElementsByClassName("details")[0].innerHTML = `${data.premiered} - ${data.ended} </br>seasons: ${data.season_count}`;
+
+            let external_sites = document.getElementsByClassName("external")[0];
+            for (const i of Object.entries(data.external_sites)) {
+                const site_id = i[0];
+                const show_ref = i[1];
+                let extstr =`${site_id}: ${show_ref}`
+                switch(site_id) {
+                    case 'tvmaze':
+                        extstr = `<a href="https://www.tvmaze.com/shows/${show_ref}" target="_blank">${site_id}</a>`;
+                        break;
+                    case 'imdb':
+                        extstr = `<a href="https://www.imdb.com/title/${show_ref}" target="_blank">${site_id}</a>`;
+                        break;
+                    // case 'thetvdb':
+                    //     extstr = `https://www.tvmaze.com/shows/${show_ref}`;
+                    //     break;
+                    default:
+                        break;
+                }
+                let div = create_div('')
+                div.innerHTML = extstr
+                external_sites.appendChild(div)
+            }
+
+            let seasons = document.getElementsByClassName("seasons")[0];
+            for (const i of Object.entries(data.episodes)) {
+                for (const j of Object.entries(i[1])) {
+                    seasons.appendChild(create_div(`${i[0]}/${j[1]['number']} - ${j[1]['name']}`))
+                }
+            }
+        }
+
+        fetch(`/api/series/{{id}}`)
+        .then(res => res.json())
+        .then(data => display(data))
+        .catch(err => {
+            const error_div = document.getElementById("error");
+            error_div.innerHTML = err.message;
+            console.log(err.message)
+        });
+    </script>
+{% endblock %}

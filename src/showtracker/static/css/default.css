@@ -1,0 +1,58 @@
+body {
+    background-color: #1e1e1e;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background-color: #414141;
+    color: #222222;
+}
+#error {
+    color: red;
+    text-align: center;
+}
+#data-source-info, #data-source-info > a {
+    color: gray;
+    text-align: center;
+}
+#user-navbar {
+    text-align: right;
+    color: white;
+}
+#user-navbar > a {
+    color: inherit !important;
+}
+#login-form {
+    color: white;
+    text-align: center;
+}
+
+.airdate-showname {
+    color: white;
+}
+.airdate-showname a {
+    color: inherit;
+    text-decoration: none;
+}
+.airdate-showname-episode-today {
+    color: turquoise !important;
+}
+.airdate-weekend {
+    background-color: #515151;
+}
+.airdate-today {
+    background-color: #3396C3;
+}
+.airdate-episode {
+    background-color: #1e1e1e;
+    color: #fff;
+}
+.airdate-episode-aired {
+    color: lightsalmon;
+}
+.airdate-episode-seen {
+    color: darkseagreen !important;
+}

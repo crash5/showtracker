@@ -1,0 +1,12 @@
+/.vscode/
+/.venv/
+/src/showtracker/VERSION
+/src/showtracker.egg-info
+/src/instance/
+.env
+/*.log
+
+.mypy_cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]

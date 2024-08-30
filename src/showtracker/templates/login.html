@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<div id="error">
+{% with messages = get_flashed_messages() -%}
+{% if messages -%}
+    <div class="error">{{ messages[0] }}</div>
+{% endif -%}
+{% endwith -%}
+</div>
+<div id="login-form">
+  <form action="/login" method="POST">
+    <label for="name">Name: <input type="text" id="name" name="name" required autofocus></label><br>
+    <label for="password">Password: <input type="password" id="password" name="password" required></label><br>
+    <label for="rememberme">Remember Me <input type="checkbox" id="rememberme" name="rememberme"></label><br>
+    <button>Login</button>
+  </form>
+</div>
+{% endblock %}
