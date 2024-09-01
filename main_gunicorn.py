@@ -55,8 +55,8 @@ if __name__ == "__main__":
     certfile = instance_path / "server.pem"
     if keyfile.is_file() and certfile.is_file():
         options.update({
-            "keyfile": keyfile,
-            "certfile": certfile
+            "keyfile": keyfile.absolute().as_posix(),
+            "certfile": certfile.absolute().as_posix()
         })
 
     StandaloneApplication(st_app.create_app("prod"), options).run()
