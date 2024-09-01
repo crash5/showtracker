@@ -87,7 +87,7 @@ def update_shows(api: sqlite_api.SqliteApi) -> set[int]:
     tvmaze_ids = series_to_update(updated_on_maze, our_shows)
     logger.info(f"TVmaze shows to update: {tvmaze_ids}")
     for id in tvmaze_ids:
-        logger.info(f"Update tvmaze show: {id}")
+        logger.debug(f"Update tvmaze show: {id}")
         import_show(id, api)
     return tvmaze_ids
 
