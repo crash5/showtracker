@@ -32,6 +32,7 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
             "workers": 2,
             "daemon": True,
             "loglevel": "debug",
+            "preload_app": True,
             "accesslog": (instance_path / "access.log").absolute().as_posix(),
             "errorlog": (instance_path / "error.log").absolute().as_posix(),
         }
