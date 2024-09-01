@@ -2,9 +2,11 @@
 # from pathlib import Path
 # package_path = Path(__file__).resolve().parent / 'src'
 # sys.path.append(package_path)
-import multiprocessing
+
 import os
+import sys
 from pathlib import Path
+
 import dotenv
 import gunicorn.app.base
 
@@ -15,7 +17,7 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
     def __init__(self, app):
         self.application = app
 
-        instance_path = Path(os.environ.get("FLASK_INSTANCE_PATH")) or sys.exit(
+        instance_path = Path(os.environ.get("FLASK_INSTANCE_PATH")) or sys.exit(  # type: ignore
             'Set "FLASK_INSTANCE_PATH" env. variable!'
         )
         listen_host = os.environ.get("GUNICORN_HOST") or sys.exit(
@@ -37,13 +39,17 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
         keyfile = instance_path / "server.key"
         certfile = instance_path / "server.crt"
         if keyfile.is_file() and certfile.is_file():
-            self.options.update({
-                "keyfile": keyfile.absolute().as_posix(),
-                "certfile": certfile.absolute().as_posix(),
-            })
+            self.options.update(
+                {
+                    "keyfile": keyfile.absolute().as_posix(),
+                    "certfile": certfile.absolute().as_posix(),
+                }
+            )
         super().__init__()
 
     def load_config(self):
+        if not self.cfg:
+            return
         config = {
             key: value
             for key, value in self.options.items()

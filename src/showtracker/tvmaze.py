@@ -1,11 +1,10 @@
 import datetime
-import logging
 import json
+import logging
 import urllib.request
 from typing import Any
 
 from . import sqlite_api
-
 
 logger = logging.getLogger(__name__)
 

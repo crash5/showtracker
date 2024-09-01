@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 import dotenv
@@ -12,11 +13,16 @@ def create_app(config="dev"):
     dotenv.load_dotenv(override=False)
 
     # can't set it from config
-    instance_path = Path(os.environ.get("FLASK_INSTANCE_PATH")) or sys.exit(
+    instance_path = Path(os.environ.get("FLASK_INSTANCE_PATH")) or sys.exit(  # type: ignore
         'Set "FLASK_INSTANCE_PATH" env. variable!'
     )
 
-    app = Flask(__name__, static_url_path="", instance_relative_config=True, instance_path=instance_path)
+    app = Flask(
+        __name__,
+        static_url_path="",
+        instance_relative_config=True,
+        instance_path=instance_path,  # type: ignore
+    )
     app.config.from_object(f"showtracker.config.{config.capitalize()}")
 
     log.init_app(app)
