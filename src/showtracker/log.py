@@ -10,4 +10,7 @@ def init_app(app):
     file_handler = RotatingFileHandler(app.instance_path / "app.log", maxBytes=1024 * 1024, backupCount=10)
     file_handler.setFormatter(lf)
     file_handler.setLevel(logging.DEBUG)
-    app.logger.addHandler(file_handler)
+    root = logging.getLogger()
+    root.addHandler(file_handler)
+
+    # app.logger.addHandler(file_handler)
