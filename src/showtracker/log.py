@@ -7,10 +7,13 @@ def init_app(app):
         fmt="%(asctime)s [%(levelname)-8s] %(message)s [logger=%(name)s process_id=%(process)d file=%(filename)s line=%(lineno)d]"
     )
 
-    file_handler = RotatingFileHandler(app.instance_path / "app.log", maxBytes=1024 * 1024, backupCount=10)
+    file_handler = RotatingFileHandler(
+        app.instance_path / "app.log", maxBytes=1024 * 1024, backupCount=10
+    )
     file_handler.setFormatter(lf)
     file_handler.setLevel(logging.DEBUG)
     root = logging.getLogger()
+    root.setLevel(logging.DEBUG)
     root.addHandler(file_handler)
 
     # app.logger.addHandler(file_handler)
