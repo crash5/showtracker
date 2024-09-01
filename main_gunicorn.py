@@ -33,5 +33,7 @@ if __name__ == "__main__":
         "workers": 1,
         "daemon": True,
         "loglevel": "debug",
+        # "keyfile": "server.key",
+        # "certfile": "server.pem",
     }
     StandaloneApplication(st_app.create_app("prod"), options).run()
