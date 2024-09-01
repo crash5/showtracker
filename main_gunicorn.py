@@ -3,6 +3,8 @@
 # package_path = Path(__file__).resolve().parent / 'src'
 # sys.path.append(package_path)
 
+from pathlib import Path
+import dotenv
 import gunicorn.app.base
 
 import showtracker.flask_app as st_app
@@ -28,12 +30,32 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
 
 
 if __name__ == "__main__":
+    dotenv.load_dotenv(override=False)
+
+    instance_path = Path(os.environ.get("FLASK_INSTANCE_PATH")) or sys.exit(
+        'Set "FLASK_INSTANCE_PATH" env. variable!'
+    )
+    listen_host = os.environ.get("GUNICORN_HOST") or sys.exit(
+        'Set "GUNICORN_HOST" env. variable!'
+    )
+    listen_port = os.environ.get("GUNICORN_PORT") or sys.exit(
+        'Set "GUNICORN_PORT" env. variable!'
+    )
+
+
     options = {
-        "bind": "%s:%s" % ("0.0.0.0", "32019"),
+        "bind": f"{listen_host}:{listen_port}",
         "workers": 1,
         "daemon": True,
-        "loglevel": "debug",
-        # "keyfile": "server.key",
-        # "certfile": "server.pem",
+        "loglevel": "debug"
     }
+
+    keyfile = instance_path / "server.key",
+    certfile = instance_path / "server.pem",
+    if keyfile.isfile() and certfile.isfile():
+        options.update({
+            "keyfile": keyfile,
+            "certfile": certfile
+        })
+
     StandaloneApplication(st_app.create_app("prod"), options).run()

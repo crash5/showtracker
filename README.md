@@ -7,6 +7,11 @@ source .venv/Scripts/activate
 
 echo 'export FLASK_SECRET="very-secret-code"' >> .env
 echo 'export DATABASE_URL="sqlite:///db.sqlite"' >> .env
+echo 'export FLASK_INSTANCE_PATH="$(pwd)"' >> .env
+
+# Gunicorn
+echo 'export GUNICORN_HOST="0.0.0.0"' >> .env
+echo 'export GUNICORN_PORT="80"' >> .env
 
 flask init-db
 flask run --debug
@@ -14,11 +19,6 @@ flask run --debug
 
 - Run for development: `flask run --debug`
 - Initialize database: `flask init-db`
-
-Set env. variables in `.env` file, like:
-- export FLASK_SECRET="very-secret-thing"
-- export DATABASE_URL="sqlite:///st-db.sqlite"
-
 
 ## Contributing
 

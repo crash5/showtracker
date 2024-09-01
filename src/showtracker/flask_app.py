@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import dotenv
 from flask import Flask
 
@@ -8,7 +10,12 @@ def create_app(config="dev"):
     # load .env content as environment variable, do not overwrite variables which already exists from env.
     dotenv.load_dotenv(override=False)
 
-    app = Flask(__name__, static_url_path="")
+    # can't set it from config
+    instance_path = Path(os.environ.get("FLASK_INSTANCE_PATH")) or sys.exit(
+        'Set "FLASK_INSTANCE_PATH" env. variable!'
+    )
+
+    app = Flask(__name__, static_url_path="", instance_relative_config=True, instance_path=instance_path)
     app.config.from_object(f"showtracker.config.{config.capitalize()}")
 
     log.init_app(app)
