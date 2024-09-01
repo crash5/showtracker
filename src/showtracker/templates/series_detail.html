@@ -46,9 +46,9 @@
                     case 'imdb':
                         extstr = `<a href="https://www.imdb.com/title/${show_ref}" target="_blank">${site_id}</a>`;
                         break;
-                    // case 'thetvdb':
-                    //     extstr = `https://www.tvmaze.com/shows/${show_ref}`;
-                    //     break;
+                    case 'thetvdb':
+                        extstr = `<a href="https://www.thetvdb.com/dereferrer/series/${show_ref}" target="_blank">${site_id}</a>`;
+                        break;
                     default:
                         break;
                 }
