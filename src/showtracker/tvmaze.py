@@ -1,9 +1,13 @@
 import datetime
+import logging
 import json
 import urllib.request
 from typing import Any
 
 from . import sqlite_api
+
+
+logger = logging.getLogger(__name__)
 
 
 def to_show(show: dict[str, Any]) -> sqlite_api.Show:
@@ -82,9 +86,9 @@ def update_shows(api: sqlite_api.SqliteApi) -> set[int]:
     updated_on_maze: dict[str, int] = get_updated_series_ids()
     our_shows = api.get_external_site_infos("tvmaze")
     tvmaze_ids = series_to_update(updated_on_maze, our_shows)
-    print(f"TVmaze shows to update: {tvmaze_ids}")
+    logger.info(f"TVmaze shows to update: {tvmaze_ids}")
     for id in tvmaze_ids:
-        print(f"Update tvmaze show: {id}")
+        logger.info(f"Update tvmaze show: {id}")
         import_show(id, api)
     return tvmaze_ids
 
