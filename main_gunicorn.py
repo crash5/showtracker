@@ -3,6 +3,7 @@
 # package_path = Path(__file__).resolve().parent / 'src'
 # sys.path.append(package_path)
 
+import os
 from pathlib import Path
 import dotenv
 import gunicorn.app.base
