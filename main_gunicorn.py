@@ -53,7 +53,7 @@ if __name__ == "__main__":
 
     keyfile = instance_path / "server.key",
     certfile = instance_path / "server.pem",
-    if keyfile.isfile() and certfile.isfile():
+    if keyfile.is_file() and certfile.is_file():
         options.update({
             "keyfile": keyfile,
             "certfile": certfile
