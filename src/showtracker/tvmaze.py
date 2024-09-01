@@ -106,7 +106,7 @@ def main():
     with app.app_context():
         api = service.get_service()
         # import_show(60153, api)
-        # update_shows(api)
+        update_shows(api)
 
 
 if __name__ == "__main__":
