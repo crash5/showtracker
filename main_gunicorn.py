@@ -27,7 +27,7 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
 
         self.options = {
             "bind": f"{listen_host}:{listen_port}",
-            "workers": (multiprocessing.cpu_count() * 2) + 1,
+            "workers": 2,
             "daemon": True,
             "loglevel": "debug",
             "accesslog": (instance_path / "access.log").absolute().as_posix(),
