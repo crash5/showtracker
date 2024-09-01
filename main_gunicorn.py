@@ -51,8 +51,8 @@ if __name__ == "__main__":
         "loglevel": "debug"
     }
 
-    keyfile = instance_path / "server.key",
-    certfile = instance_path / "server.pem",
+    keyfile = instance_path / "server.key"
+    certfile = instance_path / "server.pem"
     if keyfile.is_file() and certfile.is_file():
         options.update({
             "keyfile": keyfile,
