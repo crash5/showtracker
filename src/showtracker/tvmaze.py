@@ -42,11 +42,11 @@ def series_to_update(
 ) -> set[int]:
     show_to_update = set()
     for show in available_series_infos:
-        if show["series_id"] in updated_tvmaze_ids and (
+        if show["value"] in updated_tvmaze_ids and (
             show["last_update"] is None
-            or int(show["last_update"]) < int(updated_tvmaze_ids[show["series_id"]])
+            or int(show["last_update"]) < int(updated_tvmaze_ids[show["value"]])
         ):
-            show_to_update.add(show)
+            show_to_update.add(show["value"])
         elif show["last_update"] is None:
             show_to_update.add(show["value"])
     return show_to_update
