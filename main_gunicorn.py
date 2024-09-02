@@ -1,11 +1,10 @@
-# without install
+# To use without package install:
 # from pathlib import Path
 # package_path = Path(__file__).resolve().parent / 'src'
 # sys.path.append(package_path)
 
 import os
-import sys
-from pathlib import Path
+from typing import Any
 
 import dotenv
 import gunicorn.app.base
@@ -16,36 +15,15 @@ import showtracker.flask_app as st_app
 class StandaloneApplication(gunicorn.app.base.BaseApplication):
     def __init__(self, app):
         self.application = app
-
-        instance_path = Path(os.environ.get("FLASK_INSTANCE_PATH")) or sys.exit(  # type: ignore
-            'Set "FLASK_INSTANCE_PATH" env. variable!'
-        )
-        listen_host = os.environ.get("GUNICORN_HOST") or sys.exit(
-            'Set "GUNICORN_HOST" env. variable!'
-        )
-        listen_port = os.environ.get("GUNICORN_PORT") or sys.exit(
-            'Set "GUNICORN_PORT" env. variable!'
-        )
-
         self.options = {
-            "bind": f"{listen_host}:{listen_port}",
-            "workers": 2,
+            "bind": "127.0.0.1:80",
+            "workers": 1,
             "daemon": True,
             "loglevel": "debug",
             "preload_app": True,
-            "accesslog": (instance_path / "access.log").absolute().as_posix(),
-            "errorlog": (instance_path / "error.log").absolute().as_posix(),
         }
-
-        keyfile = instance_path / "server.key"
-        certfile = instance_path / "server.crt"
-        if keyfile.is_file() and certfile.is_file():
-            self.options.update(
-                {
-                    "keyfile": keyfile.absolute().as_posix(),
-                    "certfile": certfile.absolute().as_posix(),
-                }
-            )
+        env_options = self._collect_gunicorn_options(os.environ)
+        self.options.update(env_options)
         super().__init__()
 
     def load_config(self):
@@ -61,6 +39,19 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
 
     def load(self):
         return self.application
+
+    def _collect_gunicorn_options(self, inp) -> dict[str, Any]:
+        GUNICORN_PREFIX: str = "GUNICORN_"
+        options: dict[str, Any] = {}
+        key: str
+        value: Any
+        for key, value in dict(inp).items():
+            if not key.startswith(GUNICORN_PREFIX):
+                continue
+            name = key[len(GUNICORN_PREFIX) :].lower()
+            options[name] = value
+
+        return options
 
 
 if __name__ == "__main__":
