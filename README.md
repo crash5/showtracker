@@ -7,18 +7,22 @@ python -m venv .venv
 source .venv/Scripts/activate
 pip install .
 
+cat <<- EOF > config.prod.py
+SECRET_KEY = "very-secure-secret"
+SQLALCHEMY_DATABASE_URI = "sqlite:///db.sqlite"
+EOF
+
 cat <<- EOF > .env
-export FLASK_INSTANCE_PATH="$(pwd)"
-export FLASK_SECRET="very-secure-secret"
-export DATABASE_URL="sqlite:///db.sqlite"
+FLASK_INSTANCE_PATH="$(pwd)"
+FLASK_CONFIG_FILE=\${FLASK_INSTANCE_PATH}/config.prod.py
 
-export GUNICORN_BIND="0.0.0.0:80"
-export GUNICORN_WORKERS=2
+GUNICORN_BIND="127.0.0.1:80"
+GUNICORN_WORKERS=2
 
-export GUNICORN_KEYFILE=\${FLASK_INSTANCE_PATH}/server.key
-export GUNICORN_CERTFILE=\${FLASK_INSTANCE_PATH}/server.crt
-export GUNICORN_ACCESSLOG=\${FLASK_INSTANCE_PATH}/gunicorn-access.log
-export GUNICORN_ERRORLOG=\${FLASK_INSTANCE_PATH}/gunicorn.log
+GUNICORN_ACCESSLOG=\${FLASK_INSTANCE_PATH}/gunicorn-access.log
+GUNICORN_ERRORLOG=\${FLASK_INSTANCE_PATH}/gunicorn.log
+#GUNICORN_KEYFILE=\${FLASK_INSTANCE_PATH}/server.key
+#GUNICORN_CERTFILE=\${FLASK_INSTANCE_PATH}/server.crt
 EOF
 
 flask init-db

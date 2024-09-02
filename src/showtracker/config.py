@@ -1,12 +1,9 @@
 import os
-import sys
 from datetime import timedelta
 
 
 class Config:
-    SECRET_KEY = os.getenv("FLASK_SECRET") or sys.exit(
-        'Set "FLASK_SECRET" env. variable!'
-    )
+    SECRET_KEY = os.urandom(12)
 
     SESSION_COOKIE_SECURE = True
     SESSION_COOKIE_HTTPONLY = True
@@ -19,19 +16,18 @@ class Config:
     REMEMBER_COOKIE_SAMESITE = "Strict"
 
     # SQLAlchemy
-    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL") or sys.exit(
-        'Set "DATABASE_URL" env. variable!'
-    )
-
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class Dev(Config):
     DEBUG = True
+    SECRET_KEY = "dev-secret"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///dev-db.sqlite"
 
 
 class Test(Config):
     TESTING = True
+    SECRET_KEY = "test-secret"
     SQLALCHEMY_DATABASE_URI = f"sqlite:///:memory:"
 
 

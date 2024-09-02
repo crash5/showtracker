@@ -56,4 +56,4 @@ class StandaloneApplication(gunicorn.app.base.BaseApplication):
 
 if __name__ == "__main__":
     dotenv.load_dotenv(override=False)
-    StandaloneApplication(st_app.create_app("prod")).run()
+    StandaloneApplication(st_app.create_app()).run()
