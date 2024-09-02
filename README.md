@@ -1,28 +1,30 @@
-# showtracker _(showtracker)_
+# ShowTracker _(showtracker)_
 
-Basic install:
+Basic install for use:
 ```
 python -m venv .venv
 source .venv/Scripts/activate
+pip install .
 
-echo 'export FLASK_SECRET="very-secret-code"' >> .env
-echo 'export DATABASE_URL="sqlite:///db.sqlite"' >> .env
-echo 'export FLASK_INSTANCE_PATH="$(pwd)"' >> .env
-
-# Gunicorn
-echo 'export GUNICORN_HOST="0.0.0.0"' >> .env
-echo 'export GUNICORN_PORT="80"' >> .env
+cat <<- EOF > .env
+export FLASK_SECRET="very-secret-code"
+export DATABASE_URL="sqlite:///db.sqlite"
+export FLASK_INSTANCE_PATH="$(pwd)"
+export GUNICORN_HOST="0.0.0.0"
+export GUNICORN_PORT="80"
+EOF
 
 flask init-db
 flask run --debug
 ```
 
-- Run for development: `flask run --debug`
-- Initialize database: `flask init-db`
 
 ## Contributing
 
 General Commands:
+- Install as editable package: `pip install -e .[dev]`
+- Run for development: `flask run --debug`
+- Initialize database: `flask init-db`
 - Run test: `python -m pytest`
 - Run mypy typecheck: `python -m mypy`
 - Run flake8 style check: `python -m flake8 ./src`
