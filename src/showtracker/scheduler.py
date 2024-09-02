@@ -16,7 +16,7 @@ def init_app(app: Flask):
     scheduler.add_job(
         func=update_shows,
         trigger="interval",
-        hours=4,
+        hours=8,
         id="update_from_tvmaze",
         replace_existing=True,
         coalesce=True,
