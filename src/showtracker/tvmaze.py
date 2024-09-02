@@ -39,16 +39,17 @@ def to_episode(episode: dict[str, Any]) -> sqlite_api.Episode:
 
 def series_to_update(
     updated_tvmaze_ids: dict[str, int], available_series_infos: list[dict[str, str]]
-) -> set[int]:
+) -> set[tuple[str, int]]:
     show_to_update = set()
     for show in available_series_infos:
+        to_store = (show["name"], show["value"])
         if show["value"] in updated_tvmaze_ids and (
             show["last_update"] is None
             or int(show["last_update"]) < int(updated_tvmaze_ids[show["value"]])
         ):
-            show_to_update.add(show["value"])
+            show_to_update.add(to_store)
         elif show["last_update"] is None:
-            show_to_update.add(show["value"])
+            show_to_update.add(to_store)
     return show_to_update
 
 
@@ -81,18 +82,19 @@ def get_updated_series_ids():
 #
 
 
-def update_shows(api: sqlite_api.SqliteApi) -> set[int]:
+def update_shows(api: sqlite_api.SqliteApi) -> None:
     updated_on_maze: dict[str, int] = get_updated_series_ids()
     our_shows = api.get_external_site_infos("tvmaze")
-    tvmaze_ids = series_to_update(updated_on_maze, our_shows)
-    logger.info(f"TVmaze shows to update: {tvmaze_ids}")
-    for id in tvmaze_ids:
-        logger.debug(f"Update tvmaze show: {id}")
-        import_show(id, api)
-    return tvmaze_ids
+    selected_shows = series_to_update(updated_on_maze, our_shows)
+    logger.info(f"TVmaze shows to update: {selected_shows}")
+    for show in selected_shows:
+        logger.debug(f"Update tvmaze show: {show}")
+        tvmaze_id = show[1]
+        import_show(tvmaze_id, api)
 
 
 def import_show(show_id: int, api: sqlite_api.SqliteApi) -> int:
+    logger.info(f"Import show from TVmaze: {show_id}")
     show = get_show(show_id)
     show.episodes = get_episodes(show_id)
     return api.save(show)
