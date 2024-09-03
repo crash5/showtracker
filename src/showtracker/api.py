@@ -157,5 +157,5 @@ def import_series_post():
 def update_series():
     # FIXME(crash@veluna): allow only for admins
     service = get_service()
-    id = tvmaze.update_shows(service)
-    return jsonify({"ids": id})
+    show_ids = tvmaze.update_shows(service)
+    return jsonify({"ids": show_ids})

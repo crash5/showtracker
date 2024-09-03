@@ -87,9 +87,9 @@ def update_shows(api: sqlite_api.SqliteApi) -> None:
     our_shows = api.get_external_site_infos("tvmaze")
     selected_shows = series_to_update(updated_on_maze, our_shows)
     logger.info(f"TVmaze shows to update: {selected_shows}")
-    for id in selected_shows:
-        logger.debug(f"Update tvmaze show: {id}")
-        import_show(id, api)
+    for show_id in selected_shows:
+        logger.debug(f"Update tvmaze show: {show_id}")
+        import_show(show_id, api)
     return selected_shows
 
 
