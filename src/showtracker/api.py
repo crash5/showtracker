@@ -150,3 +150,12 @@ def import_series_post():
         service.save_show_to_member(local_show_id, 1, 1, current_user.id)
 
     return jsonify(ids_int)
+
+
+@bp.route("/update", methods=["GET"])
+@login_required
+def update_series():
+    # FIXME(crash@veluna): allow only for admins
+    service = get_service()
+    id = tvmaze.update_shows(service)
+    return jsonify(id)

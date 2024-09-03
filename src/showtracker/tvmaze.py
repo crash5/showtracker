@@ -42,7 +42,7 @@ def series_to_update(
 ) -> set[tuple[str, int]]:
     show_to_update = set()
     for show in available_series_infos:
-        to_store = (show["name"], show["value"])
+        to_store = show["value"]
         if show["value"] in updated_tvmaze_ids and (
             show["last_update"] is None
             or int(show["last_update"]) < int(updated_tvmaze_ids[show["value"]])
@@ -87,10 +87,10 @@ def update_shows(api: sqlite_api.SqliteApi) -> None:
     our_shows = api.get_external_site_infos("tvmaze")
     selected_shows = series_to_update(updated_on_maze, our_shows)
     logger.info(f"TVmaze shows to update: {selected_shows}")
-    for show in selected_shows:
-        logger.debug(f"Update tvmaze show: {show}")
-        tvmaze_id = show[1]
-        import_show(tvmaze_id, api)
+    for id in selected_shows:
+        logger.debug(f"Update tvmaze show: {id}")
+        import_show(id, api)
+    return selected_shows
 
 
 def import_show(show_id: int, api: sqlite_api.SqliteApi) -> int:
