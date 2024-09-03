@@ -158,4 +158,4 @@ def update_series():
     # FIXME(crash@veluna): allow only for admins
     service = get_service()
     show_ids = tvmaze.update_shows(service)
-    return jsonify({"ids": show_ids})
+    return jsonify({"ids": list(show_ids)})
