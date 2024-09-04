@@ -58,9 +58,9 @@
             }
 
             let seasons = document.getElementsByClassName("seasons")[0];
-            for (const i of Object.entries(data.episodes)) {
-                for (const j of Object.entries(i[1])) {
-                    seasons.appendChild(create_div(`${i[0]}/${j[1]['number']} - ${j[1]['name']}`))
+            for (const season of Object.entries(data.episodes)) {
+                for (const episode of Object.entries(season[1])) {
+                    seasons.appendChild(create_div(`${season[0]}/${episode[1]['number']} - ${episode[1]['name']}`))
                 }
             }
         }
