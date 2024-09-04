@@ -18,7 +18,7 @@ function process_episode(episode) {
     cell.date = epDate.dateTimeFormat();
     cell.isSeen = episode.seen;
     cell.isEpisode = true;
-    cell.isAired = epDate.isOlderThan(CustomDate.Now());
+    cell.isAired = epDate.isOlderThan(CustomDate.Now()) || epDate.isSameDate(CustomDate.Now());
     return cell;
 }
 
