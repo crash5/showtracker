@@ -25,7 +25,8 @@ def create_app(config="prod", instance_path=None, config_file=None):
     log.init_app(app)
     db.init_app(app)
     auth.init_app(app)
-    scheduler.init_app(app)
+    if not app.debug:
+        scheduler.init_app(app)
 
     app.register_blueprint(api.bp, url_prefix="/api")
     app.register_blueprint(web.bp)
