@@ -313,7 +313,7 @@ class SqliteApi:
             {
                 "selected_season": selected_season,
                 "member_id": member_id,
-                "show_id": show_id,
+                "series_id": show_id,
             },
         )
         session.commit()
