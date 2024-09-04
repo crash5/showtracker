@@ -39,7 +39,7 @@ def to_episode(episode: dict[str, Any]) -> sqlite_api.Episode:
 
 def series_to_update(
     updated_tvmaze_ids: dict[str, int], available_series_infos: list[dict[str, str]]
-) -> set[tuple[str, int]]:
+) -> set[int]:
     show_to_update = set()
     for show in available_series_infos:
         to_store = show["value"]
@@ -82,7 +82,7 @@ def get_updated_series_ids():
 #
 
 
-def update_shows(api: sqlite_api.SqliteApi) -> None:
+def update_shows(api: sqlite_api.SqliteApi) -> set[int]:
     updated_on_maze: dict[str, int] = get_updated_series_ids()
     our_shows = api.get_external_site_infos("tvmaze")
     selected_shows = series_to_update(updated_on_maze, our_shows)
