@@ -6,6 +6,8 @@ from flask_sqlalchemy.session import Session
 from sqlalchemy import text
 from sqlalchemy.orm import scoped_session
 
+from . import types
+
 
 @dataclass
 class Episode:
@@ -65,7 +67,8 @@ class SqliteApi:
             SELECT
                 S.series_id, S.name AS series_name, S.premiered, S.ended,
                 (SELECT MAX(season) FROM Episode WHERE series_id = S.series_id) AS series_seasons,
-                S_ES.externalsite_id AS external_site_name, S_ES.value as external_site_value
+                S_ES.externalsite_id AS external_site_id, S_ES.value as external_site_value,
+                S_ES.last_update as external_site_last_update
             FROM Series AS S
             LEFT JOIN Series_ExternalSite AS S_ES
                 ON S.series_id = S_ES.series_id
@@ -80,17 +83,20 @@ class SqliteApi:
         for res in q1:
             res = res._asdict()
             if not show:
-                show = {
-                    "id": res["series_id"],
-                    "name": res["series_name"],
-                    "premiered": res["premiered"],
-                    "ended": res["ended"],
-                    "season_count": res["series_seasons"],
-                    "external_sites": {},
-                }
-            show["external_sites"][res["external_site_name"]] = res[
-                "external_site_value"
-            ]
+                show = types.Series(
+                    res["series_id"],
+                    res["series_name"],
+                    res["series_seasons"],
+                    res["premiered"],
+                    res["ended"],
+                )
+            show.external_sites.append(
+                types.ExternalSiteInfo(
+                    res["external_site_id"],
+                    res["external_site_value"],
+                    res["external_site_last_update"],
+                )
+            )
 
         return show
 
@@ -103,21 +109,20 @@ class SqliteApi:
             {"sid": series_id},
         )
 
-        seasons = dict()
+        episodes = []
         for res in q1:
             res = res._asdict()
             season = res["season"]
-            if season not in seasons:
-                seasons[season] = []
-            seasons[season].append(
-                {
-                    "number": res["number"],
-                    "name": res["name"],
-                    "airstamp": res["airstamp"],
-                }
+            episodes.append(
+                types.Episode(
+                    res["name"],
+                    season,
+                    res["number"],
+                    res["airstamp"],
+                )
             )
 
-        return seasons
+        return episodes
 
     def get_airdate(self, first_date, last_date):
         # +1 days because the date without time get 00:00 as hour, so only check before time 00:00 with <=

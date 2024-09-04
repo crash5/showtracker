@@ -37,17 +37,10 @@ def get_series_info(series_id: int):
     series = get_service().get_series_details(series_id)
     if not series:
         return jsonify({"error": "Series not found!"}), 404
+
     episodes = get_service().get_series_episodes(series_id)
-    series["episodes"] = episodes
+    series.episodes = episodes
     return jsonify(series)
-
-
-@bp.route("/series/<int:series_id>/episodes", methods=["GET"])
-def get_series_episodes(series_id: int):
-    episodes = get_service().get_series_episodes(series_id)
-    if not episodes:
-        return jsonify({"error": "Series not found!"}), 404
-    return jsonify(episodes)
 
 
 @bp.route("/airdate", defaults={"style": "half"}, methods=["GET"])
