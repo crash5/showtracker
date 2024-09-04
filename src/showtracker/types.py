@@ -8,7 +8,7 @@ class Episode:
     name: str
     season: int
     number: int
-    airstamp: Optional[datetime.datetime] = None
+    airdate: Optional[datetime.datetime] = None
 
 
 @dataclass
