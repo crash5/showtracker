@@ -19,7 +19,9 @@
   <div class="name"></div>
   <div class="details"></div>
   <div class="external"></div>
-  <div class="seasons"></div>
+  <div class="seasons">
+    <table id="seasons_table"></table>
+  </div>
 </div>
 
     <script type="module">
@@ -28,6 +30,25 @@
             const newContent = document.createTextNode(text);
             newDiv.appendChild(newContent);
             return newDiv;
+        }
+
+        function populate_seasions_table(seasons, table) {
+            const head = table.createTHead();
+            const row = head.insertRow();
+            row.insertCell().innerHTML = "Season";
+            row.insertCell().innerHTML = "Episode";
+            row.insertCell().innerHTML = "Title";
+            row.insertCell().innerHTML = "Airdate";
+            for (const season of Object.entries(seasons)) {
+                for (const episode of Object.entries(season[1])) {
+                    const ep = episode[1]
+                    const row = table.insertRow();
+                    row.insertCell().innerHTML = `${season[0]}`;
+                    row.insertCell().innerHTML = `${ep['number']}`;
+                    row.insertCell().innerHTML = `${ep['name']}`;
+                    row.insertCell().innerHTML = `${ep['airstamp']}`;
+                }
+            }
         }
 
         function display(data) {
@@ -57,12 +78,8 @@
                 external_sites.appendChild(div)
             }
 
-            let seasons = document.getElementsByClassName("seasons")[0];
-            for (const season of Object.entries(data.episodes)) {
-                for (const episode of Object.entries(season[1])) {
-                    seasons.appendChild(create_div(`${season[0]}/${episode[1]['number']} - ${episode[1]['name']}`))
-                }
-            }
+
+            populate_seasions_table(data.episodes,  document.getElementById("seasons_table"))
         }
 
         fetch(`/api/series/{{id}}`)

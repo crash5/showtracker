@@ -56,3 +56,6 @@ table, th, td {
 .airdate-episode-seen {
     color: darkseagreen !important;
 }
+#seasons_table th, #seasons_table td{
+    color: white;
+}
