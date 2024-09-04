@@ -94,7 +94,6 @@ def update_shows(api: sqlite_api.SqliteApi) -> set[int]:
 
 
 def import_show(show_id: int, api: sqlite_api.SqliteApi) -> int:
-    logger.info(f"Import show from TVmaze: {show_id}")
     show = get_show(show_id)
     show.episodes = get_episodes(show_id)
     return api.save(show)

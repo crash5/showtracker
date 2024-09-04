@@ -2,7 +2,7 @@ import calendar
 import datetime
 from typing import Optional
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from flask_login import current_user, login_required
 
 from . import tvmaze
@@ -139,6 +139,7 @@ def import_series_post():
     service = get_service()
     for id in ids_int:
         # FIXME(crash): check if show already available
+        current_app.logger.info(f"Import show from TVmaze: {show_id}")
         local_show_id = tvmaze.import_show(id, service)
         service.save_show_to_member(local_show_id, 1, 1, current_user.id)
 
