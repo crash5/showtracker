@@ -56,7 +56,7 @@
             external_sites.forEach(i => {
                 const site_id = i.name;
                 const show_ref = i.value;
-                let extstr =`${site_id}: ${show_ref}`
+                let extstr = `${site_id}: ${show_ref}`;
                 switch(site_id) {
                     case 'tvmaze':
                         extstr = `<a href="https://www.tvmaze.com/shows/${show_ref}" target="_blank">${site_id}</a>`;
@@ -70,17 +70,29 @@
                     default:
                         break;
                 }
-                let div = create_div('')
-                div.innerHTML = extstr
-                dst.appendChild(div)
+                let div = create_div('');
+                div.innerHTML = extstr;
+                dst.appendChild(div);
         })}
+
+        function add_additional_external_sites(dst, data) {
+            ncore = create_div('');
+            ncore.innerHTML = `<a href="https://ncore.pro/torrents.php?miben=name&tipus=all_own&miszerint=fid&hogyan=DESC&mire=${data.name}" target="_blank">ncore</a>`;
+            dst.appendChild(ncore);
+
+            torrentleech = create_div('');
+            torrentleech.innerHTML = `<a href="https://www.torrentleech.org/torrents/browse/index/query/${data.name}" target="_blank">torrentleech</a>`;
+            dst.appendChild(torrentleech);
+        }
 
         function display(data) {
             document.getElementsByClassName("name")[0].innerHTML = `${data.name}`;
             document.getElementsByClassName("details")[0].innerHTML = `${data.premiered} - ${data.ended} </br>seasons: ${data.season_count}`;
 
-            popuplate_exernal_site(data.external_sites, document.getElementsByClassName("external")[0])
-            populate_episodes_table(data.episodes,  document.getElementById("episodes_table"))
+            let external = document.getElementsByClassName("external")[0];
+            popuplate_exernal_site(data.external_sites, external);
+            add_additional_external_sites(external);
+            populate_episodes_table(data.episodes,  document.getElementById("episodes_table"));
         }
 
         fetch(`/api/series/{{id}}`)
@@ -89,7 +101,7 @@
         .catch(err => {
             const error_div = document.getElementById("error");
             error_div.innerHTML = err.message;
-            console.log(err.message)
+            console.log(err.message);
         });
     </script>
 {% endblock %}
