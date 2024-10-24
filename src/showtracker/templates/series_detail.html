@@ -76,11 +76,11 @@
         })}
 
         function add_additional_external_sites(dst, data) {
-            ncore = create_div('');
+            let ncore = create_div('');
             ncore.innerHTML = `<a href="https://ncore.pro/torrents.php?miben=name&tipus=all_own&miszerint=fid&hogyan=DESC&mire=${data.name}" target="_blank">ncore</a>`;
             dst.appendChild(ncore);
 
-            torrentleech = create_div('');
+            let torrentleech = create_div('');
             torrentleech.innerHTML = `<a href="https://www.torrentleech.org/torrents/browse/index/query/${data.name}" target="_blank">torrentleech</a>`;
             dst.appendChild(torrentleech);
         }
@@ -91,7 +91,7 @@
 
             let external = document.getElementsByClassName("external")[0];
             popuplate_exernal_site(data.external_sites, external);
-            add_additional_external_sites(external);
+            add_additional_external_sites(external, data);
             populate_episodes_table(data.episodes,  document.getElementById("episodes_table"));
         }
 
